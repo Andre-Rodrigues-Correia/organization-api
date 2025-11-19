@@ -1,0 +1,25 @@
+{
+  "name": "organization-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/Andre-Rodrigues-Correia/organization-api#readme",
+  "bugs": {
+    "url": "https://github.com/Andre-Rodrigues-Correia/organization-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andre-Rodrigues-Correia/organization-api.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
