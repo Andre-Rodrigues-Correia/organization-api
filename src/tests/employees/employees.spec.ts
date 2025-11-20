@@ -7,9 +7,13 @@ import {
   employeeMock,
   employeeMockDeactivated,
   employeeMockUpdated,
+  paginatedEmployeeMock,
 } from './mocks/employees.mock';
 import OrganizationSchema from '@/modules/organizations/organizations.schema';
-import { organizationMock } from '@/tests/organizations/mocks/organization.mock';
+import {
+  organizationMock,
+  paginatedOrganizationMock,
+} from '@/tests/organizations/mocks/organization.mock';
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -39,10 +43,16 @@ describe('success cases', () => {
   });
 
   it('should find all employees', async () => {
+    const paginationMock = {
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockResolvedValue([employeeMock]),
+    };
+    jest.spyOn(EmployeeSchema, 'find').mockReturnValue(paginationMock as any);
+    jest.spyOn(EmployeeSchema, 'countDocuments').mockResolvedValue(1 as any);
     const response = await request(app).get('/employees');
 
     expect(response.status).toBe(200);
-    expect(response.body).toMatchObject([employeeMock]);
+    expect(response.body).toMatchObject(paginatedEmployeeMock);
   });
 
   it('should find a employee', async () => {
@@ -55,15 +65,19 @@ describe('success cases', () => {
   });
 
   it('should find employee by organization id', async () => {
-    jest
-      .spyOn(EmployeeSchema, 'find')
-      .mockResolvedValue([organizationMock] as any);
+    const paginationMock = {
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockResolvedValue([organizationMock]),
+    };
+    jest.spyOn(EmployeeSchema, 'find').mockReturnValue(paginationMock as any);
+    jest.spyOn(EmployeeSchema, 'countDocuments').mockResolvedValue(1 as any);
+
     const response = await request(app).get(
       '/employees/691f17afca372b06ced95d15/organization',
     );
 
     expect(response.status).toBe(200);
-    expect(response.body).toMatchObject([organizationMock]);
+    expect(response.body).toMatchObject(paginatedOrganizationMock);
   });
 
   it('should update a employee', async () => {

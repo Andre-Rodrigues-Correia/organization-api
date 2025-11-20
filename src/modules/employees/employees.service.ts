@@ -16,8 +16,24 @@ export class EmployeesService {
     return Employee.create(employee);
   }
 
-  findAll(): Promise<IEmployee[]> {
-    return Employee.find({}, '-password');
+  async findAll(page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+
+    const [items, total] = await Promise.all([
+      Employee.find({}, '-password').skip(skip).limit(limit),
+
+      Employee.countDocuments(),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages,
+    };
   }
 
   async findOne(employeeId: string): Promise<IEmployee> {
@@ -32,8 +48,28 @@ export class EmployeesService {
 
   async findEmployeeByOrganizationId(
     organizationId: string,
-  ): Promise<IEmployee[]> {
-    return Employee.find({ organization: organizationId }, '-password');
+    page = 1,
+    limit = 10,
+  ) {
+    const skip = (page - 1) * limit;
+
+    const [items, total] = await Promise.all([
+      Employee.find({ organization: organizationId }, '-password')
+        .skip(skip)
+        .limit(limit),
+
+      Employee.countDocuments({ organization: organizationId }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages,
+    };
   }
 
   async update(

@@ -4,6 +4,7 @@ import {
   createOrganizationSchema,
   updateOrganizationSchema,
 } from './organizations.validator';
+import { paginationQuerySchema } from '@/common/validator/paginated.validator';
 
 export class OrganizationsController {
   private organizationService: OrganizationsService;
@@ -25,7 +26,10 @@ export class OrganizationsController {
 
   async findAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const organizations = await this.organizationService.findAll();
+      const { page, limit } = paginationQuerySchema.parse(req.query);
+
+      const organizations = await this.organizationService.findAll(page, limit);
+
       res.status(200).json(organizations);
     } catch (err) {
       next(err);

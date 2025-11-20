@@ -19,3 +19,11 @@ export const organizationMockDeactivated = {
   city: 'São Paulo',
   is_active: false,
 };
+
+export const paginatedOrganizationMock = {
+  items: [organizationMock],
+  total: 1,
+  page: 1,
+  limit: 10,
+  totalPages: 1,
+};

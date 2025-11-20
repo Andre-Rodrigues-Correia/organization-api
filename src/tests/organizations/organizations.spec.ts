@@ -6,6 +6,7 @@ import {
   organizationMock,
   organizationMockDeactivated,
   organizationMockUpdated,
+  paginatedOrganizationMock,
 } from './mocks/organization.mock';
 import { employeeMock } from '@/tests/employees/mocks/employees.mock';
 
@@ -42,10 +43,21 @@ describe('success cases', () => {
   });
 
   it('should find all organizations', async () => {
+    const paginationMock = {
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockResolvedValue([organizationMock]),
+    };
+    jest
+      .spyOn(OrganizationSchema, 'find')
+      .mockReturnValue(paginationMock as any);
+    jest
+      .spyOn(OrganizationSchema, 'countDocuments')
+      .mockResolvedValue(1 as any);
+
     const response = await request(app).get('/organizations');
 
     expect(response.status).toBe(200);
-    expect(response.body).toMatchObject([organizationMock]);
+    expect(response.body).toMatchObject(paginatedOrganizationMock);
   });
 
   it('should find a organizations', async () => {

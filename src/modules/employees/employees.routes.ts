@@ -33,16 +33,45 @@ router.post('/', controller.create.bind(controller));
  *   get:
  *     tags:
  *       - Funcionários
- *     summary: Retorna todos funcionários
+ *     summary: Retorna funcionários com paginação
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           $ref: "#/components/schemas/PaginatedParams/properties/page"
+ *         description: Número da página
+ *
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           $ref: "#/components/schemas/PaginatedParams/properties/limit"
+ *         description: Quantidade de registros por página
  *     responses:
  *       200:
  *         description: Funcionários encontrados com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: "#/components/schemas/Employee"
+ *               type: object
+ *               properties:
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     $ref: "#/components/schemas/Employee"
+ *                 total:
+ *                   type: integer
+ *                   example: 50
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 5
  */
 router.get('/', controller.findAll.bind(controller));
 
@@ -76,23 +105,52 @@ router.get('/:id', controller.findOne.bind(controller));
  *   get:
  *     tags:
  *       - Funcionários
- *     summary: Retorna os funcionários de uma empresa
+ *     summary: Retorna os funcionários por empresa (paginado)
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: ID do funcionário
+ *         description: ID da empresa
+ *
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           $ref: "#/components/schemas/PaginatedParams/properties/page"
+ *         description: Número da página
+ *
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           $ref: "#/components/schemas/PaginatedParams/properties/limit"
+ *         description: Quantidade de registros por página
  *     responses:
  *       200:
- *         description: Funcionáris da empresa encontrados com sucesso
+ *         description: Funcionários da empresa encontrados com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: "#/components/schemas/Employee"
+ *               type: object
+ *               properties:
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     $ref: "#/components/schemas/Employee"
+ *                 total:
+ *                   type: integer
+ *                   example: 20
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 2
  */
 router.get(
   '/:id/organization',

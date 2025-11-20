@@ -6,10 +6,12 @@ import {
 import { createOrganizationSchema } from '@/modules/organizations/organizations.validator';
 import path from 'path';
 import { createEmployeeSchema } from '@/modules/employees/employees.validator';
+import { paginationQuerySchema } from '@/common/validator/paginated.validator';
 const registry = new OpenAPIRegistry();
 
 registry.register('Organization', createOrganizationSchema);
 registry.register('Employee', createEmployeeSchema);
+registry.register('PaginatedParams', paginationQuerySchema);
 
 const generator = new OpenApiGeneratorV3(registry.definitions);
 const openApiComponents = generator.generateComponents();

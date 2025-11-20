@@ -5,16 +5,28 @@ import {
   UpdateOrganizationDTO,
 } from './organizations.validator';
 import { AppError } from '@/common/error/AppError';
-import { Employee as IEmployee } from '@/modules/employees/employees.model';
-import Employee from '@/modules/employees/employees.schema';
+import { PaginatedResult } from '@/common/types/pagination.type';
 
 export class OrganizationsService {
   create(organization: CreateOrganizationDTO) {
     return Organization.create(organization);
   }
 
-  findAll(): Promise<IOrganization[]> {
-    return Organization.find();
+  async findAll(page = 1, limit = 10): Promise<PaginatedResult<IOrganization>> {
+    const skip = (page - 1) * limit;
+
+    const [items, total] = await Promise.all([
+      Organization.find().skip(skip).limit(limit),
+      Organization.countDocuments(),
+    ]);
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(organizationId: string): Promise<IOrganization> {

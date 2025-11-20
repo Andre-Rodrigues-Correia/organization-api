@@ -32,3 +32,11 @@ export const employeeMockDeactivated = {
   terminatedAt: null,
   organization: '691f17afca372b06ced95d15',
 };
+
+export const paginatedEmployeeMock = {
+  items: [employeeMock],
+  total: 1,
+  page: 1,
+  limit: 10,
+  totalPages: 1,
+};

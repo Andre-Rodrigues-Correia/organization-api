@@ -33,16 +33,24 @@ router.post('/', controller.create.bind(controller));
  *   get:
  *     tags:
  *       - Empresas
- *     summary: Retorna todas as empresas
+ *     summary: Retorna empresas com paginação
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           $ref: "#/components/schemas/PaginatedParams/properties/page"
+ *         description: Número da página
+ *
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           $ref: "#/components/schemas/PaginatedParams/properties/limit"
+ *         description: Quantidade de registros por página
  *     responses:
  *       200:
  *         description: Empresas encontradas com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: "#/components/schemas/Organization"
  */
 router.get('/', controller.findAll.bind(controller));
 
