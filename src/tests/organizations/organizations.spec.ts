@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../../app';
-import OrganizationSchema from '../../modules/organization/organization.schema';
+import OrganizationSchema from '@/modules/organizations/organizations.schema';
 import {
   organizationMock,
   organizationMockDeactivated,
@@ -28,7 +28,7 @@ beforeEach(() => {
 });
 
 describe('success cases', () => {
-  it('should create a new organization', async () => {
+  it('should create a new organizations', async () => {
     const response = await request(app)
       .post('/organizations')
       .send(organizationMock);
@@ -44,7 +44,7 @@ describe('success cases', () => {
     expect(response.body).toMatchObject([organizationMock]);
   });
 
-  it('should find a organization', async () => {
+  it('should find a organizations', async () => {
     const response = await request(app).get(
       '/organizations/691f17afca372b06ced95d15',
     );
@@ -53,7 +53,7 @@ describe('success cases', () => {
     expect(response.body).toMatchObject(organizationMock);
   });
 
-  it('should update a organization', async () => {
+  it('should update a organizations', async () => {
     const response = await request(app)
       .patch('/organizations/691f17afca372b06ced95d15')
       .send({ name: 'Empresa Teste Atualizada' });
@@ -62,7 +62,7 @@ describe('success cases', () => {
     expect(response.body).toMatchObject(organizationMockUpdated);
   });
 
-  it('should deactivate a organization', async () => {
+  it('should deactivate a organizations', async () => {
     jest
       .spyOn(OrganizationSchema, 'findByIdAndUpdate')
       .mockResolvedValueOnce(organizationMockDeactivated);
@@ -76,7 +76,7 @@ describe('success cases', () => {
 });
 
 describe('error cases', () => {
-  it('should not create a new organization without name', async () => {
+  it('should not create a new organizations without name', async () => {
     const { name: _name, ...customMock } = organizationMock;
     const response = await request(app).post('/organizations').send(customMock);
 
@@ -94,7 +94,7 @@ describe('error cases', () => {
     });
   });
 
-  it('should not create a new organization without sector', async () => {
+  it('should not create a new organizations without sector', async () => {
     const { sector: _sector, ...customMock } = organizationMock;
     const response = await request(app).post('/organizations').send(customMock);
 
@@ -112,7 +112,7 @@ describe('error cases', () => {
     });
   });
 
-  it('should not create a new organization without cnpj', async () => {
+  it('should not create a new organizations without cnpj', async () => {
     const { cnpj: _cnpj, ...customMock } = organizationMock;
     const response = await request(app).post('/organizations').send(customMock);
 
@@ -130,7 +130,7 @@ describe('error cases', () => {
     });
   });
 
-  it('should not create a new organization without city', async () => {
+  it('should not create a new organizations without city', async () => {
     const { city: _cnpj, ...customMock } = organizationMock;
     const response = await request(app).post('/organizations').send(customMock);
 
@@ -148,7 +148,7 @@ describe('error cases', () => {
     });
   });
 
-  it('should not create a new organization with invalid cnpj', async () => {
+  it('should not create a new organizations with invalid cnpj', async () => {
     const customMock = { ...organizationMock, cnpj: 'invalid' };
     const response = await request(app).post('/organizations').send(customMock);
 
@@ -165,7 +165,7 @@ describe('error cases', () => {
     });
   });
 
-  it('should not update a organization with invalid cnpj', async () => {
+  it('should not update a organizations with invalid cnpj', async () => {
     const customMock = { ...organizationMockUpdated, cnpj: 'invalid' };
     const response = await request(app)
       .patch('/organizations/691f17afca372b06ced95d15')
@@ -184,7 +184,7 @@ describe('error cases', () => {
     });
   });
 
-  it('should not updated a organization with invalid id', async () => {
+  it('should not updated a organizations with invalid id', async () => {
     jest
       .spyOn(OrganizationSchema, 'findByIdAndUpdate')
       .mockResolvedValueOnce(null);
@@ -199,7 +199,7 @@ describe('error cases', () => {
     });
   });
 
-  it('should not return a organization with invalid id', async () => {
+  it('should not return a organizations with invalid id', async () => {
     jest.spyOn(OrganizationSchema, 'findById').mockResolvedValueOnce(null);
 
     const response = await request(app).get('/organizations/1');

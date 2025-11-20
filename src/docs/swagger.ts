@@ -3,7 +3,7 @@ import {
   OpenAPIRegistry,
   OpenApiGeneratorV3,
 } from '@asteasolutions/zod-to-openapi';
-import { createOrganizationSchema } from '@/modules/organization/organization.validator';
+import { createOrganizationSchema } from '@/modules/organizations/organizations.validator';
 import path from 'path';
 const registry = new OpenAPIRegistry();
 

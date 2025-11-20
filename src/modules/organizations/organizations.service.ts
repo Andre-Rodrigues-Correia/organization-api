@@ -1,12 +1,12 @@
-import Organization from './organization.schema';
-import { Organization as IOrganization } from './organization.model';
+import Organization from './organizations.schema';
+import { Organization as IOrganization } from './organizations.model';
 import {
   CreateOrganizationDTO,
   UpdateOrganizationDTO,
-} from './organization.validator';
+} from './organizations.validator';
 import { AppError } from '@/common/error/AppError';
 
-export class OrganizationService {
+export class OrganizationsService {
   create(organization: CreateOrganizationDTO) {
     return Organization.create(organization);
   }

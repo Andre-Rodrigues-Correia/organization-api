@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
-import { OrganizationService } from './organization.service';
+import { OrganizationsService } from './organizations.service';
 import {
   createOrganizationSchema,
   updateOrganizationSchema,
-} from './organization.validator';
+} from './organizations.validator';
 
-export class OrganizationController {
-  private organizationService: OrganizationService;
+export class OrganizationsController {
+  private organizationService: OrganizationsService;
 
   constructor() {
-    this.organizationService = new OrganizationService();
+    this.organizationService = new OrganizationsService();
   }
 
   async create(req: Request, res: Response, next: NextFunction) {

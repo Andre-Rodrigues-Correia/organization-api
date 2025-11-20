@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { OrganizationController } from './organization.controller';
+import { OrganizationsController } from './organizations.controller';
 
 const router = Router();
-const controller = new OrganizationController();
+const controller = new OrganizationsController();
 
 /**
  * @openapi

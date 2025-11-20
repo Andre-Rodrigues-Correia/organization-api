@@ -3,7 +3,7 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from '@/docs/swagger';
 import { ErrorMiddleware } from '@/middlewares/error.middleware';
-import organizationRoutes from '@/modules/organization/organization.routes';
+import organizationRoutes from '@/modules/organizations/organizations.routes';
 
 const app = express();
 
