@@ -1,0 +1,78 @@
+import { Request, Response, NextFunction } from 'express';
+import { OrganizationService } from './organization.service';
+import {
+  createOrganizationSchema,
+  updateOrganizationSchema,
+} from './organization.validator';
+
+export class OrganizationController {
+  private organizationService: OrganizationService;
+
+  constructor() {
+    this.organizationService = new OrganizationService();
+  }
+
+  async create(req: Request, res: Response, next: NextFunction) {
+    try {
+      const organizationData = createOrganizationSchema.parse(req.body);
+      const organization =
+        await this.organizationService.create(organizationData);
+      res.status(201).json(organization);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async findAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const organizations = await this.organizationService.findAll();
+      res.status(200).json(organizations);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async findOne(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const organization = await this.organizationService.findOne(id);
+      res.status(200).json(organization);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const organizationData = updateOrganizationSchema.parse(req.body);
+      const organization = await this.organizationService.update(
+        id,
+        organizationData,
+      );
+      res.status(200).json(organization);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deactivate(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const organization = await this.organizationService.deactivate(id);
+      res.status(200).json(organization);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const organization = await this.organizationService.delete(id);
+      res.status(200).json(organization);
+    } catch (err) {
+      next(err);
+    }
+  }
+}
