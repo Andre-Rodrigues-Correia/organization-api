@@ -34,6 +34,7 @@ beforeEach(() => {
 
 describe('success cases', () => {
   it('should create a new organizations', async () => {
+    jest.spyOn(OrganizationSchema, 'findOne').mockResolvedValue(null);
     const response = await request(app)
       .post('/organizations')
       .send(organizationMock);
@@ -143,6 +144,20 @@ describe('error cases', () => {
           path: ['cnpj'],
         },
       ],
+    });
+  });
+
+  it('should not create a new organizations with cnpj already exists', async () => {
+    jest
+      .spyOn(OrganizationSchema, 'findOne')
+      .mockResolvedValue(organizationMock);
+    const response = await request(app)
+      .post('/organizations')
+      .send(organizationMock);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({
+      message: 'Organization already exists with this cnpj',
     });
   });
 

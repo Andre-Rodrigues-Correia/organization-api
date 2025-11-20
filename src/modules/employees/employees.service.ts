@@ -13,6 +13,13 @@ export class EmployeesService {
 
   async create(employee: CreateEmployeeDTO) {
     await this.organizationService.findOne(employee.organization);
+    const existsEmployee = await Employee.findOne({
+      email: employee.email,
+    });
+
+    if (existsEmployee) {
+      throw new AppError('Employee already exists with this email', 400);
+    }
     return Employee.create(employee);
   }
 

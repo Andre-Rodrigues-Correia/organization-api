@@ -8,7 +8,15 @@ import { AppError } from '@/common/error/AppError';
 import { PaginatedResult } from '@/common/types/pagination.type';
 
 export class OrganizationsService {
-  create(organization: CreateOrganizationDTO) {
+  async create(organization: CreateOrganizationDTO) {
+    const existsOrganization = await Organization.findOne({
+      cnpj: organization.cnpj,
+    });
+
+    if (existsOrganization) {
+      throw new AppError('Organization already exists with this cnpj', 400);
+    }
+
     return Organization.create(organization);
   }
 

@@ -1,3 +1,17 @@
+#services:
+#  mongodb:
+#    image: mongo:6
+#    container_name: mongo-organizations
+#    restart: always
+#    ports:
+#      - "27018:27017"
+#
+#    environment:
+#      MONGO_INITDB_DATABASE: organizations-api
+#    volumes:
+#      - ./mongo-data:/data/db
+#      - ./mongo-init:/docker-entrypoint-initdb.d
+
 services:
   mongodb:
     image: mongo:6
@@ -5,9 +19,19 @@ services:
     restart: always
     ports:
       - "27018:27017"
-
     environment:
       MONGO_INITDB_DATABASE: organizations-api
     volumes:
       - ./mongo-data:/data/db
       - ./mongo-init:/docker-entrypoint-initdb.d
+
+  api:
+    build: .
+    container_name: organizations-api
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URL_LOCAL: mongodb://mongodb:27017/organization-api

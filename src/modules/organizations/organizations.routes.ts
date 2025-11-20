@@ -29,6 +29,27 @@ router.post('/', controller.create.bind(controller));
 
 /**
  * @openapi
+ * /organizations/create-with-employee:
+ *   post:
+ *     tags:
+ *       - Empresas
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateOrganizationWithEmployee'
+ *     responses:
+ *       201:
+ *         description: Empresa e funcionário criados com sucesso
+ */
+router.post(
+  '/create-with-employee',
+  controller.createWithEmployee.bind(controller),
+);
+
+/**
+ * @openapi
  * /organizations:
  *   get:
  *     tags:

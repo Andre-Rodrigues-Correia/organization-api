@@ -1,11 +1,15 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { cnpj } from 'cpf-cnpj-validator';
+import { createEmployeeSchema } from '@/modules/employees/employees.validator';
 
 extendZodWithOpenApi(z);
 
 export type CreateOrganizationDTO = z.infer<typeof createOrganizationSchema>;
 export type UpdateOrganizationDTO = z.infer<typeof updateOrganizationSchema>;
+export type CreateOrganizationWithEmployeeDTO = z.infer<
+  typeof createOrganizationWithEmployeeSchema
+>;
 
 export const createOrganizationSchema = z
   .object({
@@ -36,5 +40,14 @@ export const createOrganizationSchema = z
       .openapi({ example: 'São Paulo', description: 'Cidade da empresa' }),
   })
   .openapi('Organization');
+
+export const createOrganizationWithEmployeeSchema = z
+  .object({
+    organization: createOrganizationSchema,
+    employee: createEmployeeSchema.omit({
+      organization: true,
+    }),
+  })
+  .openapi('CreateOrganizationWithEmployee');
 
 export const updateOrganizationSchema = createOrganizationSchema.partial();

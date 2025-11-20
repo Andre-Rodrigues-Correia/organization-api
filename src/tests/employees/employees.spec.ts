@@ -34,6 +34,7 @@ beforeEach(() => {
 
 describe('success cases', () => {
   it('should create a new employee', async () => {
+    jest.spyOn(EmployeeSchema, 'findOne').mockResolvedValue(null);
     const response = await request(app)
       .post('/employees')
       .send(createEmployeeMock);
@@ -136,6 +137,18 @@ describe('error cases', () => {
           path: ['email'],
         },
       ],
+    });
+  });
+
+  it('should not create a new employee with email already exists', async () => {
+    jest.spyOn(EmployeeSchema, 'findOne').mockResolvedValue(employeeMock);
+    const response = await request(app)
+      .post('/employees')
+      .send(createEmployeeMock);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({
+      message: 'Employee already exists with this email',
     });
   });
 
