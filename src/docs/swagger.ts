@@ -5,12 +5,14 @@ import {
 } from '@asteasolutions/zod-to-openapi';
 import { createOrganizationSchema } from '@/modules/organizations/organizations.validator';
 import path from 'path';
+import { createEmployeeSchema } from '@/modules/employees/employees.validator';
 const registry = new OpenAPIRegistry();
 
 registry.register('Organization', createOrganizationSchema);
+registry.register('Employee', createEmployeeSchema);
 
 const generator = new OpenApiGeneratorV3(registry.definitions);
-const openApiComponents = generator.generateComponents(); // gera #/components
+const openApiComponents = generator.generateComponents();
 
 export const swaggerSpec = swaggerJsdoc({
   definition: {

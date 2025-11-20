@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from '@/docs/swagger';
 import { ErrorMiddleware } from '@/middlewares/error.middleware';
 import organizationRoutes from '@/modules/organizations/organizations.routes';
+import employeesRoutes from '@/modules/employees/employees.routes';
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json(), cors());
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/organizations', organizationRoutes);
+app.use('/employees', employeesRoutes);
 
 app.use(ErrorMiddleware.handle.bind(ErrorMiddleware));
 

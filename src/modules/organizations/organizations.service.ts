@@ -5,6 +5,8 @@ import {
   UpdateOrganizationDTO,
 } from './organizations.validator';
 import { AppError } from '@/common/error/AppError';
+import { Employee as IEmployee } from '@/modules/employees/employees.model';
+import Employee from '@/modules/employees/employees.schema';
 
 export class OrganizationsService {
   create(organization: CreateOrganizationDTO) {
@@ -23,6 +25,10 @@ export class OrganizationsService {
     }
 
     return organization;
+  }
+
+  findAllOrganizationEmployees(organizationId: string): Promise<IEmployee[]> {
+    return Employee.find({ organization: organizationId }, '-password');
   }
 
   async update(

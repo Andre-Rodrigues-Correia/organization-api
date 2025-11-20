@@ -25,7 +25,10 @@ export const createOrganizationSchema = z
       .refine((value) => cnpj.isValid(value), {
         message: 'CNPJ inválido',
       })
-      .openapi({ example: '12345678000190', description: 'CNPJ da empresa' }),
+      .openapi({
+        example: '28.253.203/0001-09',
+        description: 'CNPJ da empresa',
+      }),
 
     city: z
       .string()

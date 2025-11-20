@@ -1,11 +1,13 @@
 import request from 'supertest';
 import app from '../../app';
 import OrganizationSchema from '@/modules/organizations/organizations.schema';
+import EmployeeSchema from '@/modules/employees/employees.schema';
 import {
   organizationMock,
   organizationMockDeactivated,
   organizationMockUpdated,
 } from './mocks/organization.mock';
+import { employeeMock } from '@/tests/employees/mocks/employees.mock';
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -25,6 +27,8 @@ beforeEach(() => {
   jest
     .spyOn(OrganizationSchema, 'findByIdAndDelete')
     .mockResolvedValue(organizationMock as any);
+
+  jest.spyOn(EmployeeSchema, 'find').mockResolvedValue([employeeMock] as any);
 });
 
 describe('success cases', () => {
@@ -51,6 +55,15 @@ describe('success cases', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject(organizationMock);
+  });
+
+  it('should find all organizations employees', async () => {
+    const response = await request(app).get(
+      '/organizations/691f17afca372b06ced95d15/employees',
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject([employeeMock]);
   });
 
   it('should update a organizations', async () => {
