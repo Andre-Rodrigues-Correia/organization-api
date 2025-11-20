@@ -41,6 +41,21 @@ export class EmployeesController {
     }
   }
 
+  async findEmployeeByOrganizationId(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const { id } = req.params;
+      const employees =
+        await this.employeesService.findEmployeeByOrganizationId(id);
+      res.status(200).json(employees);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;

@@ -54,6 +54,18 @@ describe('success cases', () => {
     expect(response.body).toMatchObject(employeeMock);
   });
 
+  it('should find employee by organization id', async () => {
+    jest
+      .spyOn(EmployeeSchema, 'find')
+      .mockResolvedValue([organizationMock] as any);
+    const response = await request(app).get(
+      '/employees/691f17afca372b06ced95d15/organization',
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject([organizationMock]);
+  });
+
   it('should update a employee', async () => {
     const response = await request(app)
       .patch('/employees/691f17afca372b06ced95d15')

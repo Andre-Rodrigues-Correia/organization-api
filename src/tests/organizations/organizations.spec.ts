@@ -57,15 +57,6 @@ describe('success cases', () => {
     expect(response.body).toMatchObject(organizationMock);
   });
 
-  it('should find all organizations employees', async () => {
-    const response = await request(app).get(
-      '/organizations/691f17afca372b06ced95d15/employees',
-    );
-
-    expect(response.status).toBe(200);
-    expect(response.body).toMatchObject([employeeMock]);
-  });
-
   it('should update a organizations', async () => {
     const response = await request(app)
       .patch('/organizations/691f17afca372b06ced95d15')

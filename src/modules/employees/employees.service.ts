@@ -30,6 +30,12 @@ export class EmployeesService {
     return employee;
   }
 
+  async findEmployeeByOrganizationId(
+    organizationId: string,
+  ): Promise<IEmployee[]> {
+    return Employee.find({ organization: organizationId }, '-password');
+  }
+
   async update(
     employeeId: string,
     employee: UpdateEmployeeDTO,

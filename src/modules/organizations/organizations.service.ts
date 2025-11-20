@@ -27,10 +27,6 @@ export class OrganizationsService {
     return organization;
   }
 
-  findAllOrganizationEmployees(organizationId: string): Promise<IEmployee[]> {
-    return Employee.find({ organization: organizationId }, '-password');
-  }
-
   async update(
     organizationId: string,
     organization: UpdateOrganizationDTO,

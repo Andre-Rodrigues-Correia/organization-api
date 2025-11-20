@@ -72,6 +72,35 @@ router.get('/:id', controller.findOne.bind(controller));
 
 /**
  * @openapi
+ * /employees/{id}/organization:
+ *   get:
+ *     tags:
+ *       - Funcionários
+ *     summary: Retorna os funcionários de uma empresa
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do funcionário
+ *     responses:
+ *       200:
+ *         description: Funcionáris da empresa encontrados com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/Employee"
+ */
+router.get(
+  '/:id/organization',
+  controller.findEmployeeByOrganizationId.bind(controller),
+);
+
+/**
+ * @openapi
  * /employees/{id}:
  *   patch:
  *     tags:

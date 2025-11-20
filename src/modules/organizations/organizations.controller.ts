@@ -32,21 +32,6 @@ export class OrganizationsController {
     }
   }
 
-  async findOrganizationEmployees(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
-    try {
-      const { id } = req.params;
-      const employees =
-        await this.organizationService.findAllOrganizationEmployees(id);
-      res.status(200).json(employees);
-    } catch (err) {
-      next(err);
-    }
-  }
-
   async findOne(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
