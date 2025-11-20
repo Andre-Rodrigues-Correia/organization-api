@@ -13,6 +13,8 @@
   "license": "ISC",
   "author": "",
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
     "test": "jest",
     "lint": "eslint .",
@@ -55,6 +57,7 @@
     "cpf-cnpj-validator": "^1.0.3",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "module-alias": "^2.2.3",
     "mongoose": "^8.20.0",
     "morgan": "^1.10.1",
     "swagger-jsdoc": "^6.2.8",
@@ -62,5 +65,8 @@
     "winston": "^3.18.3",
     "zod": "^4.1.12",
     "zod-openapi": "^5.4.3"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   }
 }
