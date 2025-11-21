@@ -48,7 +48,7 @@ Ela oferece uma interface RESTful completa para gerenciamento de empresas e func
 ## 🛠 Funcionalidades
 
 ### Empresas
-- Criar empresa
+- Criar empresa (É possível criar uma empresa junto com um primeiro funcionário)
 - Atualizar empresa
 - Consultar empresa(s)
 - Desativar empresa
@@ -61,15 +61,13 @@ Ela oferece uma interface RESTful completa para gerenciamento de empresas e func
 - Desativar funcionário
 - Excluir funcionário (restrições aplicadas, veja observações abaixo)
 
-### Empresa e funcionário paralelo
-- Criar empresa e funcionário em paralelo
 
 ---
 
 ## 📝 Observações Importantes
 
 - A criação de funcionários depende da existência de uma empresa, pois cada funcionário deve estar associado a uma organização.
-- É possível criar uma empresa junto com um funcionário em um único endpoint.
+- É possível criar uma empresa junto com um funcionário, para isso deve-se enviar a propriedade `employee` dentro de `organization`. Essa funcionalidade é opcional.
 - Empresas e funcionários podem ser desativados sem necessidade de exclusão, preservando o histórico de dados.
 - Exclusões permanentes só podem ocorrer em empresas e funcionários que já estejam desativados.
 - Não é possível excluir uma empresa com funcionários ativos.
