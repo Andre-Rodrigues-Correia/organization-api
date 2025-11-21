@@ -23,13 +23,18 @@ export class EmployeesService {
     return Employee.create(employee);
   }
 
-  async findAll(page = 1, limit = 10) {
+  async findAll(
+    page = 1,
+    limit = 10,
+    status: 'active' | 'deactivated' | null = null,
+  ) {
     const skip = (page - 1) * limit;
+    const filter = status ? { status: status } : {};
 
     const [items, total] = await Promise.all([
-      Employee.find({}, '-password').skip(skip).limit(limit),
+      Employee.find(filter, '-password').skip(skip).limit(limit),
 
-      Employee.countDocuments(),
+      Employee.countDocuments({ ...filter }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -57,15 +62,17 @@ export class EmployeesService {
     organizationId: string,
     page = 1,
     limit = 10,
+    status: 'active' | 'deactivated' | null = null,
   ) {
     const skip = (page - 1) * limit;
+    const filter = status ? { status: status } : {};
 
     const [items, total] = await Promise.all([
-      Employee.find({ organization: organizationId }, '-password')
+      Employee.find({ organization: organizationId, ...filter }, '-password')
         .skip(skip)
         .limit(limit),
 
-      Employee.countDocuments({ organization: organizationId }),
+      Employee.countDocuments({ organization: organizationId, ...filter }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -83,6 +90,19 @@ export class EmployeesService {
     employeeId: string,
     employee: UpdateEmployeeDTO,
   ): Promise<IEmployee> {
+    if (employee.email) {
+      const existsEmployee = await Employee.findOne({
+        email: employee.email,
+        _id: { $ne: employeeId },
+      });
+      if (existsEmployee) {
+        throw new AppError(
+          'Another employee already exists with this email',
+          400,
+        );
+      }
+    }
+
     const updatedEmployee = await Employee.findByIdAndUpdate(
       employeeId,
       { $set: employee },
@@ -111,12 +131,20 @@ export class EmployeesService {
   }
 
   async delete(employeeId: string): Promise<IEmployee> {
-    const deletedEmployee = await Employee.findByIdAndDelete(employeeId, {
-      select: '-password',
-    });
+    const deletedEmployee = await Employee.findOneAndDelete(
+      { _id: employeeId, status: { $ne: 'active' } },
+      { select: '-password' },
+    );
 
     if (!deletedEmployee) {
-      throw new AppError('Employee not found', 404);
+      const exists = await Employee.findById(employeeId);
+      if (!exists) {
+        throw new AppError('Employee not found', 404);
+      }
+      throw new AppError(
+        'Employee is active. It is not possible to delete active employees.',
+        400,
+      );
     }
 
     return deletedEmployee;

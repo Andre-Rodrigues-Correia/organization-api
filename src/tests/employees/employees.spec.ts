@@ -21,11 +21,12 @@ beforeEach(() => {
   jest.spyOn(EmployeeSchema, 'create').mockResolvedValue(employeeMock as any);
   jest.spyOn(EmployeeSchema, 'find').mockResolvedValue([employeeMock] as any);
   jest.spyOn(EmployeeSchema, 'findById').mockResolvedValue(employeeMock as any);
+  jest.spyOn(EmployeeSchema, 'findOne').mockResolvedValue(employeeMock as any);
   jest
     .spyOn(EmployeeSchema, 'findByIdAndUpdate')
     .mockResolvedValue(employeeMockUpdated as any);
   jest
-    .spyOn(EmployeeSchema, 'findByIdAndDelete')
+    .spyOn(EmployeeSchema, 'findOneAndDelete')
     .mockResolvedValue(employeeMock as any);
   jest
     .spyOn(OrganizationSchema, 'findById')
@@ -34,7 +35,9 @@ beforeEach(() => {
 
 describe('success cases', () => {
   it('should create a new employee', async () => {
+    jest.spyOn(EmployeeSchema, 'findById').mockResolvedValue(null);
     jest.spyOn(EmployeeSchema, 'findOne').mockResolvedValue(null);
+
     const response = await request(app)
       .post('/employees')
       .send(createEmployeeMock);
@@ -100,6 +103,18 @@ describe('success cases', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject(employeeMockDeactivated);
+  });
+
+  it('should delete a employee', async () => {
+    jest
+      .spyOn(EmployeeSchema, 'findById')
+      .mockResolvedValue(employeeMockDeactivated);
+    const response = await request(app).delete(
+      '/employees/691f17afca372b06ced95d15',
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject(employeeMock);
   });
 });
 
@@ -222,6 +237,15 @@ describe('error cases', () => {
     });
   });
 
+  it('should not return a employee with invalid id', async () => {
+    jest.spyOn(EmployeeSchema, 'findById').mockResolvedValueOnce(null);
+    const response = await request(app).get('/employees/invalid');
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject({
+      message: 'Employee not found',
+    });
+  });
+
   it('should not update a employee with invalid email', async () => {
     const customMock = { ...employeeMockUpdated, email: 'invalid' };
     const response = await request(app)
@@ -241,12 +265,50 @@ describe('error cases', () => {
     });
   });
 
+  it('should not update a employee with email already exists', async () => {
+    jest
+      .spyOn(EmployeeSchema, 'findOne')
+      .mockResolvedValue(employeeMockUpdated);
+
+    const response = await request(app)
+      .patch('/employees/691f17afca372b06ced95d15')
+      .send(employeeMockUpdated);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({
+      message: 'Another employee already exists with this email',
+    });
+  });
+
   it('should not updated a employee with invalid id', async () => {
     jest.spyOn(EmployeeSchema, 'findByIdAndUpdate').mockResolvedValueOnce(null);
-
+    jest.spyOn(EmployeeSchema, 'findOne').mockResolvedValueOnce(null);
     const response = await request(app)
       .patch('/employees/invalid')
       .send(employeeMock);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject({
+      message: 'Employee not found',
+    });
+  });
+
+  it('should not deactivate a employee with invalid id', async () => {
+    jest.spyOn(EmployeeSchema, 'findByIdAndUpdate').mockResolvedValueOnce(null);
+
+    const response = await request(app).post('/employees/deactivate/invalid');
+
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject({
+      message: 'Employee not found',
+    });
+  });
+
+  it('should not delete a employee with invalid id', async () => {
+    jest.spyOn(EmployeeSchema, 'findOneAndDelete').mockResolvedValueOnce(null);
+    jest.spyOn(EmployeeSchema, 'findById').mockResolvedValueOnce(null);
+
+    const response = await request(app).delete('/employees/invalid');
 
     expect(response.status).toBe(404);
     expect(response.body).toMatchObject({

@@ -25,9 +25,9 @@ export class EmployeesController {
 
   async findAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const { page, limit } = paginationQuerySchema.parse(req.query);
+      const { page, limit, status } = paginationQuerySchema.parse(req.query);
 
-      const result = await this.employeesService.findAll(page, limit);
+      const result = await this.employeesService.findAll(page, limit, status);
 
       res.status(200).json(result);
     } catch (err) {
@@ -53,12 +53,13 @@ export class EmployeesController {
     try {
       const { id } = req.params;
 
-      const { page, limit } = paginationQuerySchema.parse(req.query);
+      const { page, limit, status } = paginationQuerySchema.parse(req.query);
 
       const result = await this.employeesService.findEmployeeByOrganizationId(
         id,
         page,
         limit,
+        status,
       );
 
       res.status(200).json(result);

@@ -83,12 +83,29 @@ describe('success cases', () => {
     jest
       .spyOn(OrganizationSchema, 'findByIdAndUpdate')
       .mockResolvedValueOnce(organizationMockDeactivated);
+    jest.spyOn(EmployeeSchema, 'find').mockResolvedValueOnce([]);
     const response = await request(app).post(
       '/organizations/deactivate/691f17afca372b06ced95d15',
     );
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject(organizationMockDeactivated);
+  });
+
+  it('should delete a organizations', async () => {
+    jest.spyOn(EmployeeSchema, 'find').mockResolvedValueOnce([]);
+    jest
+      .spyOn(OrganizationSchema, 'findOneAndDelete')
+      .mockResolvedValueOnce(organizationMock);
+    jest
+      .spyOn(OrganizationSchema, 'findOne')
+      .mockResolvedValueOnce(organizationMockDeactivated);
+    const response = await request(app).delete(
+      '/organizations/691f17afca372b06ced95d15',
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject(organizationMock);
   });
 });
 
@@ -234,6 +251,54 @@ describe('error cases', () => {
     jest.spyOn(OrganizationSchema, 'findById').mockResolvedValueOnce(null);
 
     const response = await request(app).get('/organizations/1');
+
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject({
+      message: 'Organization not found',
+    });
+  });
+
+  it('should not deactivate a organnization with invalid id', async () => {
+    jest
+      .spyOn(OrganizationSchema, 'findByIdAndUpdate')
+      .mockResolvedValueOnce(null);
+    jest.spyOn(EmployeeSchema, 'find').mockResolvedValueOnce([]);
+
+    const response = await request(app).post(
+      '/organizations/deactivate/invalid',
+    );
+
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject({
+      message: 'Organization not found',
+    });
+  });
+
+  it('should not delete a organizations with active employees', async () => {
+    jest
+      .spyOn(OrganizationSchema, 'findByIdAndUpdate')
+      .mockResolvedValueOnce(organizationMockDeactivated);
+    jest.spyOn(EmployeeSchema, 'find').mockResolvedValueOnce([employeeMock]);
+
+    const response = await request(app).delete(
+      '/organizations/691f17afca372b06ced95d15',
+    );
+
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({
+      message:
+        'Organization has employees actives, It is not possible to delete with active employees.',
+    });
+  });
+
+  it('should not delete a organizations with invalid id', async () => {
+    jest.spyOn(EmployeeSchema, 'find').mockResolvedValueOnce([]);
+    jest.spyOn(OrganizationSchema, 'findById').mockResolvedValueOnce(null);
+    jest
+      .spyOn(OrganizationSchema, 'findOneAndDelete')
+      .mockResolvedValueOnce(null);
+
+    const response = await request(app).delete('/organizations/invalid');
 
     expect(response.status).toBe(404);
     expect(response.body).toMatchObject({

@@ -6,6 +6,8 @@ extendZodWithOpenApi(z);
 export type CreateEmployeeDTO = z.infer<typeof createEmployeeSchema>;
 export type UpdateEmployeeDTO = z.infer<typeof updateEmployeeSchema>;
 
+export const EmployeeStatusEnum = z.enum(['active', 'deactivated']);
+
 export const createEmployeeSchema = z
   .object({
     name: z
@@ -29,6 +31,11 @@ export const createEmployeeSchema = z
       .min(8)
       .max(128)
       .openapi({ example: 'Abcd1234', description: 'Senha do funcionário' }),
+
+    status: EmployeeStatusEnum.default('active').optional().openapi({
+      example: 'active',
+      description: 'Status do funcionário',
+    }),
 
     organization: z.string().min(1).openapi({
       example: '691f17afca372b06ced95d15',

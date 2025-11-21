@@ -48,6 +48,13 @@ router.post('/', controller.create.bind(controller));
  *         schema:
  *           $ref: "#/components/schemas/PaginatedParams/properties/limit"
  *         description: Quantidade de registros por página
+ *
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           $ref: "#/components/schemas/PaginatedParams/properties/status"
+ *         description: Status do funcionário
  *     responses:
  *       200:
  *         description: Funcionários encontrados com sucesso
@@ -127,6 +134,13 @@ router.get('/:id', controller.findOne.bind(controller));
  *         schema:
  *           $ref: "#/components/schemas/PaginatedParams/properties/limit"
  *         description: Quantidade de registros por página
+ *
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           $ref: "#/components/schemas/PaginatedParams/properties/status"
+ *         description: Status do funcionário
  *     responses:
  *       200:
  *         description: Funcionários da empresa encontrados com sucesso

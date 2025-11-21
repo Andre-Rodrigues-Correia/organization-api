@@ -6,6 +6,7 @@ import {
 } from './organizations.validator';
 import { AppError } from '@/common/error/AppError';
 import { PaginatedResult } from '@/common/types/pagination.type';
+import Employee from '@/modules/employees/employees.schema';
 
 export class OrganizationsService {
   async create(organization: CreateOrganizationDTO) {
@@ -65,9 +66,21 @@ export class OrganizationsService {
   }
 
   async deactivate(organizationId: string): Promise<IOrganization> {
+    const existsEmployees = await Employee.find({
+      organization: organizationId,
+      status: 'active',
+    });
+
+    if (existsEmployees.length > 0) {
+      throw new AppError(
+        'Organization has employees actives, It is not possible to delete with active employees.',
+        400,
+      );
+    }
+
     const updatedOrganization = await Organization.findByIdAndUpdate(
       organizationId,
-      { $set: { is_active: true, deleted_at: new Date() } },
+      { $set: { is_active: false, deleted_at: new Date() } },
       { new: true },
     );
 
@@ -79,11 +92,32 @@ export class OrganizationsService {
   }
 
   async delete(organizationId: string): Promise<IOrganization> {
-    const deletedOrganization =
-      await Organization.findByIdAndDelete(organizationId);
+    const existsEmployees = await Employee.find({
+      organization: organizationId,
+      status: 'active',
+    });
+
+    if (existsEmployees.length > 0) {
+      throw new AppError(
+        'Organization has employees actives, It is not possible to delete with active employees.',
+        400,
+      );
+    }
+
+    const deletedOrganization = await Organization.findOneAndDelete({
+      _id: organizationId,
+      is_active: false,
+    });
 
     if (!deletedOrganization) {
-      throw new AppError('Organization not found', 404);
+      const existsOrganization = await Organization.findById(organizationId);
+      if (!existsOrganization) {
+        throw new AppError('Organization not found', 404);
+      }
+      throw new AppError(
+        'Organization is active. It is not possible to delete active organizations.',
+        400,
+      );
     }
 
     return deletedOrganization;

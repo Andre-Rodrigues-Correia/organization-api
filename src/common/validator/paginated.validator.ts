@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+import { EmployeeStatusEnum } from '@/modules/employees/employees.validator';
 
 extendZodWithOpenApi(z);
 
@@ -13,6 +14,10 @@ export const paginationQuerySchema = z
     limit: z.coerce.number().min(1).max(100).optional().openapi({
       example: 10,
       description: 'Quantidade de itens por página (opcional)',
+    }),
+    status: EmployeeStatusEnum.optional().openapi({
+      example: 'active',
+      description: 'Status do funcionário',
     }),
   })
   .openapi('PaginationQuery');
