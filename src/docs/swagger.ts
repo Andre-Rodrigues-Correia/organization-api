@@ -32,5 +32,8 @@ export const swaggerSpec = swaggerJsdoc({
     },
     components: openApiComponents.components,
   },
-  apis: [path.resolve(__dirname, '../modules/**/*.routes.ts')],
+  apis: [
+    path.join(process.cwd(), 'src/modules/**/*.routes.ts'),
+    path.join(process.cwd(), 'dist/modules/**/*.routes.js'),
+  ],
 });
