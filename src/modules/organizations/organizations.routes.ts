@@ -16,37 +16,16 @@ const controller = new OrganizationsController();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/Organization"
+ *             $ref: "#/components/schemas/CreateOrganizationWithEmployee"
  *     responses:
  *       201:
  *         description: Empresa criada com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               $ref: "#/components/schemas/Organization"
+ *               $ref: "#/components/schemas/CreateOrganizationWithEmployee"
  */
 router.post('/', controller.create.bind(controller));
-
-/**
- * @openapi
- * /organizations/create-with-employee:
- *   post:
- *     tags:
- *       - Empresas
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/CreateOrganizationWithEmployee'
- *     responses:
- *       201:
- *         description: Empresa e funcionário criados com sucesso
- */
-router.post(
-  '/create-with-employee',
-  controller.createWithEmployee.bind(controller),
-);
 
 /**
  * @openapi

@@ -19,7 +19,7 @@ export const createEmployeeSchema = z
       .string()
       .min(1)
       .email()
-      .openapi({ example: 'contato@seguro.com.br', description: 'Email' }),
+      .openapi({ example: 'jhondoe@mail.com.br', description: 'Email' }),
 
     position: z
       .string()

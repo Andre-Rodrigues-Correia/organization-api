@@ -1,49 +1,27 @@
 import { Request, Response, NextFunction } from 'express';
 import { OrganizationsService } from './organizations.service';
 import {
-  createOrganizationSchema,
   createOrganizationWithEmployeeSchema,
   updateOrganizationSchema,
 } from './organizations.validator';
 import { paginationQuerySchema } from '@/common/validator/paginated.validator';
-import { EmployeesService } from '@/modules/employees/employees.service';
 
 export class OrganizationsController {
   private organizationService: OrganizationsService;
-  private employeeService: EmployeesService;
 
   constructor() {
     this.organizationService = new OrganizationsService();
-    this.employeeService = new EmployeesService();
   }
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const organizationData = createOrganizationSchema.parse(req.body);
+      const organizationData = createOrganizationWithEmployeeSchema.parse(
+        req.body,
+      );
       const organization =
         await this.organizationService.create(organizationData);
+
       res.status(201).json(organization);
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async createWithEmployee(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { organization, employee } =
-        createOrganizationWithEmployeeSchema.parse(req.body);
-
-      const createdOrganization =
-        await this.organizationService.create(organization);
-      const createdEmployee = await this.employeeService.create({
-        ...employee,
-        organization: createdOrganization._id.toString(),
-      });
-
-      res.status(201).json({
-        organization: createdOrganization,
-        employee: createdEmployee,
-      });
     } catch (err) {
       next(err);
     }

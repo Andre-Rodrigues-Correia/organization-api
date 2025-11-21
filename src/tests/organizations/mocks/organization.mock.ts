@@ -20,6 +20,15 @@ export const organizationMockDeactivated = {
   is_active: false,
 };
 
+export const createdOrganizationMock = {
+  _id: '691f17afca372b06ced95d15',
+  name: 'Empresa Teste',
+  sector: 'Financeiro',
+  cnpj: '97.864.586/0001-74',
+  city: 'São Paulo',
+  is_active: true,
+};
+
 export const paginatedOrganizationMock = {
   items: [organizationMock],
   total: 1,

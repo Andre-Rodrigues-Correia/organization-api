@@ -3,19 +3,23 @@ import app from '../../app';
 import OrganizationSchema from '@/modules/organizations/organizations.schema';
 import EmployeeSchema from '@/modules/employees/employees.schema';
 import {
+  createdOrganizationMock,
   organizationMock,
   organizationMockDeactivated,
   organizationMockUpdated,
   paginatedOrganizationMock,
 } from './mocks/organization.mock';
-import { employeeMock } from '@/tests/employees/mocks/employees.mock';
+import {
+  createEmployeeMock,
+  employeeMock,
+} from '@/tests/employees/mocks/employees.mock';
 
 beforeEach(() => {
   jest.clearAllMocks();
 
   jest
     .spyOn(OrganizationSchema, 'create')
-    .mockResolvedValue(organizationMock as any);
+    .mockResolvedValue(createdOrganizationMock as any);
   jest
     .spyOn(OrganizationSchema, 'find')
     .mockResolvedValue([organizationMock] as any);
@@ -30,6 +34,7 @@ beforeEach(() => {
     .mockResolvedValue(organizationMock as any);
 
   jest.spyOn(EmployeeSchema, 'find').mockResolvedValue([employeeMock] as any);
+  jest.spyOn(EmployeeSchema, 'create').mockResolvedValue(employeeMock as any);
 });
 
 describe('success cases', () => {
@@ -41,6 +46,25 @@ describe('success cases', () => {
 
     expect(response.status).toBe(201);
     expect(response.body).toMatchObject(organizationMock);
+  });
+
+  it('should create a new organizations with employee', async () => {
+    jest.spyOn(OrganizationSchema, 'findOne').mockResolvedValue(null);
+    jest.spyOn(EmployeeSchema, 'findOne').mockResolvedValue(null);
+    const response = await request(app)
+      .post('/organizations')
+      .send({
+        ...organizationMock,
+        employee: createEmployeeMock,
+      });
+
+    console.log(response.body);
+
+    expect(response.status).toBe(201);
+    expect(response.body).toMatchObject({
+      organization: createdOrganizationMock,
+      employee: employeeMock,
+    });
   });
 
   it('should find all organizations', async () => {

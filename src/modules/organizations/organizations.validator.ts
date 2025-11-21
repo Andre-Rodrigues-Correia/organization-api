@@ -41,12 +41,12 @@ export const createOrganizationSchema = z
   })
   .openapi('Organization');
 
-export const createOrganizationWithEmployeeSchema = z
-  .object({
-    organization: createOrganizationSchema,
-    employee: createEmployeeSchema.omit({
-      organization: true,
-    }),
+export const createOrganizationWithEmployeeSchema = createOrganizationSchema
+  .extend({
+    employee: createEmployeeSchema
+      .omit({ organization: true })
+      .optional()
+      .nullable(),
   })
   .openapi('CreateOrganizationWithEmployee');
 

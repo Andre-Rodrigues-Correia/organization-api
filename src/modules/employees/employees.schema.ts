@@ -10,7 +10,7 @@ const EmployeesSchema = new mongoose.Schema(
     position: { type: String, required: true },
     status: { type: String, default: 'active' },
     terminatedAt: { type: Date, default: null },
-    password: { type: String, required: true },
+    password: { type: String, required: true, select: false },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Organization',

@@ -1,7 +1,7 @@
 import Organization from './organizations.schema';
 import { Organization as IOrganization } from './organizations.model';
 import {
-  CreateOrganizationDTO,
+  CreateOrganizationWithEmployeeDTO,
   UpdateOrganizationDTO,
 } from './organizations.validator';
 import { AppError } from '@/common/error/AppError';
@@ -9,13 +9,32 @@ import { PaginatedResult } from '@/common/types/pagination.type';
 import Employee from '@/modules/employees/employees.schema';
 
 export class OrganizationsService {
-  async create(organization: CreateOrganizationDTO) {
+  async create(organization: CreateOrganizationWithEmployeeDTO) {
+    console.log(organization);
     const existsOrganization = await Organization.findOne({
       cnpj: organization.cnpj,
     });
 
     if (existsOrganization) {
       throw new AppError('Organization already exists with this cnpj', 400);
+    }
+
+    if (organization.employee) {
+      const existsEmployee = await Employee.findOne({
+        email: organization.employee.email,
+      });
+
+      if (existsEmployee) {
+        throw new AppError('Employee already exists with this email', 400);
+      }
+
+      const createdOrganization = await Organization.create(organization);
+      const createdEmployee = await Employee.create({
+        ...organization.employee,
+        organization: createdOrganization._id.toString(),
+      });
+
+      return { organization: createdOrganization, employee: createdEmployee };
     }
 
     return Organization.create(organization);
@@ -73,7 +92,7 @@ export class OrganizationsService {
 
     if (existsEmployees.length > 0) {
       throw new AppError(
-        'Organization has employees actives, It is not possible to delete with active employees.',
+        'Organization has employees actives, It is not possible to deactivate with active employees.',
         400,
       );
     }
