@@ -28,7 +28,7 @@ Ela oferece uma interface RESTful completa para gerenciamento de empresas e func
   npm run dev
 ```
 
-- **Observação**: Antes de iniciar a aplicação sem Docker, é necessário ter o MongoDB rodando localmente para que o servidor consiga se conectar ao banco de dados
+- **Observação**: Antes de iniciar a aplicação **sem Docker**, é necessário ter o MongoDB rodando localmente para que o servidor consiga se conectar ao banco de dados
 ---
 
 ## ⚙️ Tecnologias Utilizadas:
